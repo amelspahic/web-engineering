@@ -1,11 +1,11 @@
+var MONGODB_URL = process.env.MONGODB_URL;
 const express = require("express");
+const apiResponse = require("./helpers/response");
 const routes = require("./routes/index");
-const mongodbsetup = require("./mongodbsetup");
 const app = express();
 
-var MONGODB_URL = process.env.MONGODB_URL;
 var mongoose = require("mongoose");
-mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+mongoose.connect('mongodb://127.0.0.1:27017/web-engineering', { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
 	if (process.env.NODE_ENV !== "test") {
 		console.log("Connected to %s", MONGODB_URL);
 		console.log("App is running ... \n");
@@ -20,6 +20,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 var db = mongoose.connection;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use("/api/", routes);
 
 app.all("*", function(req, res) {

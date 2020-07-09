@@ -1,7 +1,11 @@
-module.exports.getAuthors = async (req, res, next) => {
-	res.send("Hello authors!");
-};
+var express = require("express");
+const apiResponse = require("../helpers/response");
+const AuthorsController = require("../controllers/authors");
 
-module.exports.getAuthor = async (req, res, next) => {
-	res.send("Hello author!");
-};
+var router = express.Router();
+
+router.get("/", AuthorsController.getAuthorsPaged);
+router.get("/:id", AuthorsController.getAuthor);
+router.post("/", AuthorsController.saveAuthor);
+
+module.exports = router;

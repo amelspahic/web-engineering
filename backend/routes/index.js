@@ -1,13 +1,12 @@
 const express = require("express");
-const router = express.Router();
+var app = express();
 
 const { catchErrors } = require("../handlers/errorHandler");
 
-const { getBooks, getBook } = require("./books");
-const { getAuthor, getAuthors } = require("./authors");
+var books = require("./books");
+var authors = require("./authors");
 
-router.get("/", catchErrors(getBooks));
+app.use("/books/", books);
+app.use("/authors/", authors);
 
-
-
-module.exports = router;
+module.exports = app;
