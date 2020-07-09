@@ -15,6 +15,16 @@ exports.getBooksPaged = (req, res, next) => {
   }
 };
 
+exports.getBook = (req, res, next) => {
+  const bookId = req.params.id;
+
+  Book.findById(bookId)
+    .exec()
+    .then((book) => {
+      apiResponse.successResponse(res, book);
+    });
+};
+
 exports.saveBook = (req, res, next) => {
   const book = new Book({
     _id: new mongoose.Types.ObjectId(),
