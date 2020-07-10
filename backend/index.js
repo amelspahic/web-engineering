@@ -3,30 +3,37 @@ const express = require("express");
 const apiResponse = require("./helpers/response");
 const routes = require("./routes/index");
 const app = express();
+const cors = require("cors");
 
 var mongoose = require("mongoose");
-mongoose.connect('mongodb://127.0.0.1:27017/web-engineering', { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-	if (process.env.NODE_ENV !== "test") {
-		console.log("Connected to %s", MONGODB_URL);
-		console.log("App is running ... \n");
-		console.log("Press CTRL + C to stop the process. \n");
-	}
-})
-	.catch(err => {
-		console.error("App starting error:", err.message);
-		process.exit(1);
-	});
+mongoose
+  .connect("mongodb://127.0.0.1:27017/web-engineering", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    if (process.env.NODE_ENV !== "test") {
+      console.log("Connected to %s", MONGODB_URL);
+      console.log("App is running ... \n");
+      console.log("Press CTRL + C to stop the process. \n");
+    }
+  })
+  .catch((err) => {
+    console.error("App starting error:", err.message);
+    process.exit(1);
+  });
 
 var db = mongoose.connection;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use("/api/", routes);
 
-app.all("*", function(req, res) {
-	return apiResponse.notFoundResponse(res, "Page not found");
+app.all("*", function (req, res) {
+  return apiResponse.notFoundResponse(res, "Page not found");
 });
 
 app.listen(8000, () => {
-	console.log("Web Engineering backend listening on port 8000!");
+  console.log("Web Engineering backend listening on port 8000!");
 });
