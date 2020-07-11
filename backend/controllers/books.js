@@ -30,13 +30,42 @@ exports.saveBook = (req, res, next) => {
     _id: new mongoose.Types.ObjectId(),
     title: req.body.title,
     description: req.body.description,
-    author: req.body.authorId,
+    author: req.body.author,
   });
 
   book
     .save()
     .then((result) => {
       apiResponse.successResponse(res, result);
+    })
+    .catch((err) => {
+      apiResponse.serverErrorResponse(res, err);
+    });
+};
+
+exports.updateBook = (req, res, next) => {
+  const id = req.params.id;
+  const updateProperties = {};
+  for (const updProp of Object.keys(req.body)) {
+    updateProperties[updProp] = req.body[updProp];
+  }
+
+  Book.updateOne({ _id: id }, { $set: updateProperties })
+    .exec()
+    .then((result) => {
+      apiResponse.successResponse(res, result);
+    })
+    .catch((err) => {
+      apiResponse.serverErrorResponse(res, err);
+    });
+};
+
+exports.deleteBook = (req, res, next) => {
+  const id = req.params.id;
+  Book.deleteOne({ _id: id })
+    .exec()
+    .then((res) => {
+      apiResponse.noContentResponse(res, "Successfully deleted");
     })
     .catch((err) => {
       apiResponse.serverErrorResponse(res, err);

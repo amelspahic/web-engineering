@@ -1,14 +1,17 @@
 const Author = require("../models/author");
 const apiResponse = require("../helpers/response");
 const mongoose = require("mongoose");
-const author = require("../models/author");
 
 exports.getAuthorsPaged = (req, res, next) => {
-  Author.find()
-    .exec()
-    .then((authors) => {
-      apiResponse.successResponse(res, authors);
-    });
+  try {
+    Author.find()
+      .exec()
+      .then((authors) => {
+        apiResponse.successResponse(res, authors);
+      });
+  } catch (err) {
+    return apiResponse.serverErrorResponse(res, err);
+  }
 };
 
 exports.getAuthor = (req, res, next) => {
@@ -32,6 +35,35 @@ exports.saveAuthor = (req, res, next) => {
     .save()
     .then((result) => {
       apiResponse.successResponse(res, result);
+    })
+    .catch((err) => {
+      apiResponse.serverErrorResponse(res, err);
+    });
+};
+
+exports.updateAuthor = (req, res, next) => {
+  const id = req.params.id;
+  const updateProperties = {};
+  for (const updProp of Object.keys(req.body)) {
+    updateProperties[updProp] = req.body[updProp];
+  }
+
+  Author.updateOne({ _id: id }, { $set: updateProperties })
+    .exec()
+    .then((result) => {
+      apiResponse.successResponse(res, result);
+    })
+    .catch((err) => {
+      apiResponse.serverErrorResponse(res, err);
+    });
+};
+
+exports.deleteAuthor = (req, res, next) => {
+  const id = req.params.id;
+  Author.deleteOne({ _id: id })
+    .exec()
+    .then((res) => {
+      apiResponse.noContentResponse(res, "Successfully deleted");
     })
     .catch((err) => {
       apiResponse.serverErrorResponse(res, err);
