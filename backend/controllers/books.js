@@ -64,10 +64,11 @@ exports.deleteBook = (req, res, next) => {
   const id = req.params.id;
   Book.deleteOne({ _id: id })
     .exec()
-    .then((res) => {
-      apiResponse.noContentResponse(res, "Successfully deleted");
+    .then((result) => {
+      apiResponse.noContentResponse(res, result);
     })
     .catch((err) => {
+      console.log("fail", err);
       apiResponse.serverErrorResponse(res, err);
     });
 };

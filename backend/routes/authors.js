@@ -1,5 +1,4 @@
 var express = require("express");
-const apiResponse = require("../helpers/response");
 const AuthorsController = require("../controllers/authors");
 
 var router = express.Router();

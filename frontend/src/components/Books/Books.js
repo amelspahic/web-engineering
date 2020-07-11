@@ -63,7 +63,7 @@ const Books = () => {
             <th>Title</th>
             <th>Description</th>
             <th>Author</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -76,8 +76,19 @@ const Books = () => {
                   {book.author?.firstName} {book.author?.lastName}
                 </td>
                 <td>
-                  <span onClick={() => handleEdit(book)}>edit</span> |{" "}
-                  <span onClick={() => handleDelete(book)}>delete</span>
+                  <span
+                    onClick={() => handleEdit(book)}
+                    style={{ color: "blue", cursor: "pointer" }}
+                  >
+                    edit
+                  </span>{" "}
+                  |{" "}
+                  <span
+                    onClick={() => handleDelete(book)}
+                    style={{ color: "blue", cursor: "pointer" }}
+                  >
+                    delete
+                  </span>
                 </td>
               </tr>
             ))}
@@ -91,16 +102,23 @@ const Books = () => {
         selectedBook={selectedBook}
       ></Book>
 
-      <Modal animation={false} show={showDeleteModal} onHide={hideDeleteModal}>
+      <Modal
+        animation={false}
+        show={showDeleteModal}
+        onHide={() => hideDeleteModal(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Delete</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{selectedBook?._id}</Modal.Body>
+        <Modal.Body>
+          Do you really want to delete book:{" "}
+          <span style={{ fontWeight: "bold" }}>{selectedBook?.title}</span>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={hideDeleteModal}>
+          <Button variant="secondary" onClick={() => hideDeleteModal(false)}>
             Close
           </Button>
-          <Button variant="danger" onClick={handleDeleteBook}>
+          <Button variant="danger" onClick={() => handleDeleteBook(true)}>
             Delete
           </Button>
         </Modal.Footer>
