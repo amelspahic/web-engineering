@@ -6,8 +6,8 @@ This is a sample application created using MERN (MongoDb, Express, React, Node.j
 
 ## Run Docker with docker-compose
 
-- Install Docker for your operating system
-- From the root of the application, run `docker-compose up --build` (this could take a while)
+- Install [Docker](https://docs.docker.com/get-docker/) for your operating system
+- From the root of the application, run `docker-compose up` (this could take a while)
 - Access the web application from `http://localhost:3000`
 
 ## Run independently

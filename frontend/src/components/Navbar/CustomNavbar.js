@@ -15,11 +15,11 @@ const CustomNavbar = () => {
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/books">
-              Books
-            </Nav.Link>
             <Nav.Link as={Link} to="/authors">
               Authors
+            </Nav.Link>
+            <Nav.Link as={Link} to="/books">
+              Books
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
