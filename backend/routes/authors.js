@@ -1,7 +1,7 @@
-var express = require("express");
+const express = require("express");
 const AuthorsController = require("../controllers/authors");
 
-var router = express.Router();
+const router = express.Router();
 
 router.get("/", AuthorsController.getAuthorsPaged);
 router.get("/:id", AuthorsController.getAuthor);
