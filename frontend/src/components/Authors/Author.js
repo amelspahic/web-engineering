@@ -1,14 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import useCreateAuthor from "../../utils/hooks/useAuthorCreate";
 import { useForm } from "react-hook-form";
 import { Form, FormControl } from "react-bootstrap";
-import useAuthors from "../../utils/hooks/useAuthors";
 import useUpdateAuthor from "../../utils/hooks/useAuthorUpdate";
 
 const Author = ({ isShown = false, handleClose, selectedAuthor }) => {
-  const [{ createLoading }, createAuthor] = useCreateAuthor();
-  const [{ updateLoading }, updateAuthor] = useUpdateAuthor(
+  const [, createAuthor] = useCreateAuthor();
+  const [, updateAuthor] = useUpdateAuthor(
     selectedAuthor && selectedAuthor._id
   );
   const { handleSubmit, register, errors } = useForm();

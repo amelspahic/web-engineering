@@ -7,12 +7,10 @@ import useAuthors from "../../utils/hooks/useAuthors";
 import useUpdateBook from "../../utils/hooks/useBookUpdate";
 
 const Book = ({ isShown = false, handleClose, selectedBook }) => {
-  const [{ createLoading }, createBook] = useCreateBook();
-  const [{ updateLoading }, updateBook] = useUpdateBook(
-    selectedBook && selectedBook._id
-  );
+  const [, createBook] = useCreateBook();
+  const [, updateBook] = useUpdateBook(selectedBook && selectedBook._id);
   const { handleSubmit, register, errors } = useForm();
-  const [{ authors, loading: authorsLoading }, getAuthors] = useAuthors();
+  const [{ authors }, getAuthors] = useAuthors();
 
   const onSubmit = async (data) => {
     if (selectedBook) {

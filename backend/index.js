@@ -1,13 +1,17 @@
-var MONGODB_URL = process.env.MONGODB_URL;
 const express = require("express");
 const apiResponse = require("./helpers/response");
 const routes = require("./routes/index");
 const app = express();
 const cors = require("cors");
 
+const { mongoDbUrl, port } = require("./config");
+
+var MONGODB_URL = process.env.MONGODB_URL || mongoDbUrl;
+var APP_PORT = process.env.APP_PORT || port;
+
 var mongoose = require("mongoose");
 mongoose
-  .connect("mongodb://127.0.0.1:27017/web-engineering", {
+  .connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -34,6 +38,6 @@ app.all("*", function (req, res) {
   return apiResponse.notFoundResponse(res, "Page not found");
 });
 
-app.listen(8000, () => {
-  console.log("Web Engineering backend listening on port 8000!");
+app.listen(APP_PORT, () => {
+  console.log(`Web Engineering backend listening on port ${APP_PORT}!`);
 });

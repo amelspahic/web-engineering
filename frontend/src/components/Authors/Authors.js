@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAuthors from "../../utils/hooks/useAuthors";
-import { Table, Button, Jumbotron, Modal } from "react-bootstrap";
+import { Table, Button, Jumbotron, Modal, Spinner } from "react-bootstrap";
 import useDeleteAuthor from "../../utils/hooks/useAuthorDelete";
 import Author from "./Author";
 
@@ -65,30 +65,41 @@ const Authors = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {authors &&
-            authors.map((author) => (
-              <tr key={author._id}>
-                <td>{author.firstName}</td>
-                <td>{author.lastName}</td>
-                <td>
-                  <span
-                    onClick={() => handleEdit(author)}
-                    style={{ color: "blue", cursor: "pointer" }}
-                  >
-                    edit
-                  </span>{" "}
-                  |{" "}
-                  <span
-                    onClick={() => handleDelete(author)}
-                    style={{ color: "blue", cursor: "pointer" }}
-                  >
-                    delete
-                  </span>
-                </td>
-              </tr>
-            ))}
-        </tbody>
+
+        {authorsLoading ? (
+          <tbody>
+            <tr>
+              <td colSpan="3" style={{ textAlign: "center" }}>
+                <Spinner animation="border" />
+              </td>
+            </tr>
+          </tbody>
+        ) : (
+          <tbody>
+            {authors &&
+              authors.map((author) => (
+                <tr key={author._id}>
+                  <td>{author.firstName}</td>
+                  <td>{author.lastName}</td>
+                  <td>
+                    <span
+                      onClick={() => handleEdit(author)}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      edit
+                    </span>{" "}
+                    |{" "}
+                    <span
+                      onClick={() => handleDelete(author)}
+                      style={{ color: "blue", cursor: "pointer" }}
+                    >
+                      delete
+                    </span>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        )}
       </Table>
       <Button onClick={handleModal}>Add</Button>
 
@@ -117,7 +128,20 @@ const Authors = () => {
             Close
           </Button>
           <Button variant="danger" onClick={handleDeleteAuthor}>
-            Delete
+            {deleteLoading ? (
+              <div>
+                <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{" "}
+                <span> Loading</span>
+              </div>
+            ) : (
+              <span>Delete</span>
+            )}
           </Button>
         </Modal.Footer>
       </Modal>
