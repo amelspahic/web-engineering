@@ -1,71 +1,62 @@
-const Author = require("../models/author");
+const AuthorService = require("../services/authors");
 const apiResponse = require("../helpers/response");
-const mongoose = require("mongoose");
 
-exports.getAuthorsPaged = (req, res, next) => {
+exports.getAuthors = async (req, res, next) => {
   try {
-    Author.find()
-      .exec()
-      .then((authors) => {
-        apiResponse.successResponse(res, authors);
-      });
+    const authors = await AuthorService.getAuthors({});
+    return apiResponse.successResponse(res, authors);
   } catch (err) {
-    return apiResponse.serverErrorResponse(res, err);
+    next(err);
   }
 };
 
-exports.getAuthor = (req, res, next) => {
-  const authorId = req.params.id;
-
-  Author.findById(authorId)
-    .exec()
-    .then((author) => {
-      apiResponse.successResponse(res, author);
-    });
-};
-
-exports.saveAuthor = (req, res, next) => {
-  const author = new Author({
-    _id: new mongoose.Types.ObjectId(),
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-  });
-
-  author
-    .save()
-    .then((result) => {
-      apiResponse.successResponse(res, result);
-    })
-    .catch((err) => {
-      apiResponse.serverErrorResponse(res, err);
-    });
-};
-
-exports.updateAuthor = (req, res, next) => {
-  const id = req.params.id;
-  const updateProperties = {};
-  for (const updProp of Object.keys(req.body)) {
-    updateProperties[updProp] = req.body[updProp];
+exports.getAuthor = async (req, res, next) => {
+  try {
+    const authorId = req.params.id;
+    const author = await AuthorService.getAuthor(authorId);
+    return apiResponse.successResponse(res, author);
+  } catch (err) {
+    next(err);
   }
-
-  Author.updateOne({ _id: id }, { $set: updateProperties })
-    .exec()
-    .then((result) => {
-      apiResponse.successResponse(res, result);
-    })
-    .catch((err) => {
-      apiResponse.serverErrorResponse(res, err);
-    });
 };
 
-exports.deleteAuthor = (req, res, next) => {
-  const id = req.params.id;
-  Author.deleteOne({ _id: id })
-    .exec()
-    .then((result) => {
-      apiResponse.noContentResponse(res, result);
-    })
-    .catch((err) => {
-      apiResponse.serverErrorResponse(res, err);
+exports.saveAuthor = async (req, res, next) => {
+  try {
+    const authorUpdate = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+    };
+
+    const author = await AuthorService.saveAuthor(authorUpdate);
+    return apiResponse.successResponse(res, author);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateAuthor = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const updateProperties = {};
+    for (const updProp of Object.keys(req.body)) {
+      updateProperties[updProp] = req.body[updProp];
+    }
+
+    const author = await AuthorService.updateAuthor(id, updateProperties);
+    return apiResponse.successResponse(res, author);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteAuthor = async (req, res, next) => {
+  try {
+    const authorId = req.params.id;
+    await AuthorService.deleteAuthor(authorId);
+    return apiResponse.noContentResponse(res, {
+      message: "Successfully deleted",
     });
+  } catch (err) {
+    next(err);
+  }
 };

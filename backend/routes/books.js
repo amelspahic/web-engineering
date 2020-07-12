@@ -3,7 +3,7 @@ const BooksController = require("../controllers/books");
 
 const router = express.Router();
 
-router.get("/", BooksController.getBooksPaged);
+router.get("/", BooksController.getBooks);
 router.get("/:id", BooksController.getBook);
 router.post("/", BooksController.saveBook);
 router.patch("/:id", BooksController.updateBook);

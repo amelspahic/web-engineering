@@ -1,74 +1,61 @@
-const Book = require("../models/book");
+const BookService = require("../services/books");
 const apiResponse = require("../helpers/response");
-const mongoose = require("mongoose");
 
-exports.getBooksPaged = (req, res) => {
-	try {
-		Book.find()
-			.populate("author", "firstName lastName")
-			.exec()
-			.then((books) => {
-				apiResponse.successResponse(res, books);
-			});
-	} catch (err) {
-		return apiResponse.serverErrorResponse(res, err);
-	}
+exports.getBooks = async (req, res, next) => {
+  try {
+    const books = await BookService.getBooks({});
+    return apiResponse.successResponse(res, books);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getBook = (req, res) => {
-	const bookId = req.params.id;
-
-	Book.findById(bookId)
-		.exec()
-		.then((book) => {
-			apiResponse.successResponse(res, book);
-		});
+exports.getBook = async (req, res, next) => {
+  try {
+    const bookId = req.params.id;
+    const book = await BookService.getBook(bookId);
+    return apiResponse.successResponse(res, book);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.saveBook = (req, res) => {
-	const book = new Book({
-		_id: new mongoose.Types.ObjectId(),
-		title: req.body.title,
-		description: req.body.description,
-		author: req.body.author,
-	});
+exports.saveBook = async (req, res, next) => {
+  try {
+    const bookUpdate = {
+      title: req.body.title,
+      description: req.body.description,
+      author: req.body.author,
+    };
 
-	book
-		.save()
-		.then((result) => {
-			apiResponse.successResponse(res, result);
-		})
-		.catch((err) => {
-			apiResponse.serverErrorResponse(res, err);
-		});
+    const book = await BookService.saveBook(bookUpdate);
+    return apiResponse.successResponse(res, book);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.updateBook = (req, res) => {
-	const id = req.params.id;
-	const updateProperties = {};
-	for (const updProp of Object.keys(req.body)) {
-		updateProperties[updProp] = req.body[updProp];
-	}
+exports.updateBook = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const updateProperties = {};
+    for (const updProp of Object.keys(req.body)) {
+      updateProperties[updProp] = req.body[updProp];
+    }
 
-	Book.updateOne({ _id: id }, { $set: updateProperties })
-		.exec()
-		.then((result) => {
-			apiResponse.successResponse(res, result);
-		})
-		.catch((err) => {
-			apiResponse.serverErrorResponse(res, err);
-		});
+    const book = await BookService.updateBook(id, updateProperties);
+    return apiResponse.successResponse(res, book);
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.deleteBook = (req, res) => {
-	const id = req.params.id;
-	Book.deleteOne({ _id: id })
-		.exec()
-		.then((result) => {
-			apiResponse.noContentResponse(res, result);
-		})
-		.catch((err) => {
-			console.log("fail", err);
-			apiResponse.serverErrorResponse(res, err);
-		});
+exports.deleteBook = async (req, res, next) => {
+  try {
+    const bookId = req.params.id;
+    await BookService.deleteBook(bookId);
+    return apiResponse.noContentResponse(res, "Successfully deleted");
+  } catch (err) {
+    next(err);
+  }
 };
